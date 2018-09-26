@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Location ป้ายและสินทรัพย์</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/png" href="css/images/myicon.png" />
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/app.css" />
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <style>
+          html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            min-width: 768px;
+          }
+          #map, #pano {
+            float: left;
+            height: 100%;
+            width: 50%;
+          }
+          .distance {
+            position: fixed;
+            bottom: 30px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            width: 300px;
+            padding: 20px;
+            border-radius: 5px;
+          }
+        </style>
+    </head>
+    <body>
+        <div class="form-group" style="position: absolute; z-index: 1; left: 130px; top: 10px;">
+            <select id="location" class="form-control">
+                <option value="นนทบุรี">นนทบุรี</option>
+                <option value="สมุทรปราการ">สมุทรปราการ</option>
+                <option value="นครสวรรค์">นครสวรรค์</option>
+                <option value="เพชรบูรณ์">เพชรบูรณ์</option>
+                <option value="ลำพูน">ลำพูน</option>
+                <option value="เชียงใหม่">เชียงใหม่</option>
+                <option value="สระบุรี">สระบุรี</option>
+                <option value="นครนายก">นครนายก</option>
+                <option value="ชลบุรี">ชลบุรี</option>
+                <option value="ระยอง 1 สินทรัพย์ 1">ระยอง 1 สินทรัพย์ 1</option>
+                <option value="ระยอง 1 สินทรัพย์ 2">ระยอง 1 สินทรัพย์ 2</option>
+                <option value="ระยอง 1 สินทรัพย์ 3">ระยอง 1 สินทรัพย์ 3</option>
+                <option value="ระยอง 2 สินทรัพย์ 1">ระยอง 2 สินทรัพย์ 1</option>
+                <option value="ระยอง 2 สินทรัพย์ 2">ระยอง 2 สินทรัพย์ 2</option>
+                <option value="ระยอง 2 สินทรัพย์ 3">ระยอง 2 สินทรัพย์ 3</option>
+                <option value="ระยอง 3 สินทรัพย์ 1">ระยอง 3 สินทรัพย์ 1</option>
+                <option value="ระยอง 3 สินทรัพย์ 2">ระยอง 3 สินทรัพย์ 2</option>
+                <option value="ระยอง 3 สินทรัพย์ 3">ระยอง 3 สินทรัพย์ 3</option>
+                <option value="ราชบุรี">ราชบุรี</option>
+            </select>
+        </div>
+        <div id="map">
+        </div>
+        <div class="distance"></div>
+        <div id="pano"></div>
+        <script>
+            $("#location").on("change", function(){
+                switch($(this).val())
+                {
+                    case "นนทบุรี":
+                        update_map(13.946313, 100.420589, 13.952941, 100.409370, 5, 2);
+                        break;
+                    case "สมุทรปราการ":
+                        update_map(13.740771,100.646533, 13.652819, 100.872118, 55, 1);
+                        break;
+                    case "นครสวรรค์":
+                        update_map(15.8672179,100.6073245, 15.838840, 100.582340, -20, 2);
+                        break;
+                    case "เพชรบูรณ์":
+                        update_map(15.8303142,101.0087182, 15.818317, 101.091329, -20, 2);
+                        break;
+                    case "ลำพูน":
+                        update_map(18.389453, 98.678926, 18.367468, 98.715605, 15, 1);
+                        break;
+                    case "เชียงใหม่":
+                        update_map(18.7443489,99.1204239, 18.792189, 99.158962, -10, 1);
+                        break;
+                    case "สระบุรี":
+                        update_map(14.509772, 100.916674, 14.505392, 100.909846, 0, 1);
+                        break;
+                    case "นครนายก":
+                        update_map(14.287291, 101.278462, 14.2929008, 101.2707152, -150, 2);
+                        break;
+                    case "ชลบุรี":
+                        update_map(12.921372,101.0138227, 12.9241388, 101.0333824, -25, 1);
+                        break;
+                    case "ระยอง 1 สินทรัพย์ 1":
+                        update_map(12.683242, 101.238239, 12.6149875,101.3877081, -40, 3);
+                        break;
+                    case "ระยอง 1 สินทรัพย์ 2":
+                        update_map(12.683242, 101.238239, 12.7962569, 101.6482546, -40, 3);
+                        break;
+                    case "ระยอง 1 สินทรัพย์ 3":
+                        update_map(12.683242, 101.238239, 12.6843658, 101.1056583, -40, 3);
+                        break;
+                    case "ระยอง 2 สินทรัพย์ 1":
+                        update_map(12.683445, 101.238655, 12.6149875,101.3877081, 65, 2);
+                        break;
+                    case "ระยอง 2 สินทรัพย์ 2":
+                        update_map(12.683445, 101.238655, 12.7962569, 101.6482546, 65, 2);
+                        break;
+                    case "ระยอง 2 สินทรัพย์ 3":
+                        update_map(12.683445, 101.238655, 12.6843658, 101.1056583, 65, 2);
+                        break;
+                    case "ระยอง 3 สินทรัพย์ 1":
+                        update_map(12.6833337,101.2420221, 12.6149875,101.3877081, 45, 1);
+                        break;
+                    case "ระยอง 3 สินทรัพย์ 2":
+                        update_map(12.6833337,101.2420221, 12.7962569, 101.6482546, 45, 1);
+                        break;
+                    case "ระยอง 3 สินทรัพย์ 3":
+                        update_map(12.6833337,101.2420221, 12.6843658, 101.1056583, 45, 1);
+                        break;
+                    case "ราชบุรี":
+                        update_map(13.626961, 99.621129, 13.666077, 99.627965, 70, 2);
+                        break;
+                }
+            });
+            function update_map(lat_v, lng_v, lat_m, lng_m, heading, zoom)
+            {
+                var directionsDisplay = new google.maps.DirectionsRenderer;
+                var directionsService = new google.maps.DirectionsService;
+                var pikat = {lat: lat_v, lng: lng_v};
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                    center: pikat,
+                    zoom: 11
+                });
+                var marker = new google.maps.Marker({
+                    position: {lat: lat_m, lng: lng_m},
+                    map: map,
+                    title: 'สินทรัพย์'
+                });
+                var street = new google.maps.StreetViewPanorama(
+                    document.getElementById('pano'), {
+                        position: pikat,
+                        pov: {
+                            heading: heading,
+                            pitch: 10,
+                            zoom: zoom
+                        }
+                    });
+                directionsDisplay.setMap(map);
+                directionsDisplay.setOptions( { suppressMarkers: true } );
+                calculateAndDisplayRoute(directionsService, directionsDisplay, lat_v, lng_v, lat_m, lng_m);
+                map.setStreetView(street);
+            }
+            function initialize() {
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            var directionsService = new google.maps.DirectionsService;
+            var pikat = {lat: 13.946313, lng: 100.420589};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: pikat,
+                zoom: 11
+            });
+            var marker = new google.maps.Marker({
+                position: {lat: 13.952541, lng: 100.409370},
+                map: map,
+                title: 'สินทรัพย์'
+            });
+            var street = new google.maps.StreetViewPanorama(
+                document.getElementById('pano'), {
+                    position: pikat,
+                    pov: {
+                        heading: 5,
+                        pitch: 10,
+                        zoom: 2
+                    }
+                });
+            directionsDisplay.setMap(map);
+            directionsDisplay.setOptions( { suppressMarkers: true } );
+            calculateAndDisplayRoute(directionsService, directionsDisplay, 13.946313, 100.420589, 13.952541, 100.409370);
+            map.setStreetView(street);
+        }
+        function calculateAndDisplayRoute(directionsService, directionsDisplay, lat_v, lng_v, lat_m, lng_m) {
+            var selectedMode = 'DRIVING';
+            directionsService.route({
+                origin: {lat: lat_v, lng: lng_v},
+                destination: {lat: lat_m, lng: lng_m},
+                travelMode: google.maps.TravelMode[selectedMode]
+            }, function(response, status) {
+            if(status === 'OK')
+            {
+                directionsDisplay.setDirections(response);
+                var route = response.routes[0];
+                console.log(route.legs);
+                var summaryPanel = '';
+                for (var i = 0; i < route.legs.length; i++)
+                {
+                    summaryPanel += '<strong>ป้าย: </strong>' + route.legs[i].start_address + '<br />';
+                    summaryPanel += '<strong>สินทรัพย์: </strong>' + route.legs[i].end_address + '<br />';
+                    summaryPanel += '<strong>ระยะทาง: </strong>' + route.legs[i].distance.text + '<br />';
+                    summaryPanel += '<strong>เวลาการเดินทางโดยประมาณ: </strong>' + route.legs[i].duration.text + '<br />';
+                }
+                $(".distance").html(summaryPanel);
+            }
+            else
+            {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+    }
+        </script>
+        <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initialize">
+        </script>
+  </body>
+</html>
